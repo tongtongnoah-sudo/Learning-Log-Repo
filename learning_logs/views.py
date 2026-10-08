@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.http import HttpRequest, HttpResponse
 
 from .models import Topic, Entry
 from .forms import TopicForm, EntryForm
@@ -8,13 +9,13 @@ from .forms import TopicForm, EntryForm
 print("Hello, Git")
 
 
-def index(request):
+def index(request: HttpRequest) -> HttpResponse:
     """The home page for Learning Log."""
     return render(request, "learning_logs/index.html")
 
 
 @login_required
-def topics(request):
+def topics(request: HttpRequest) -> HttpResponse:
     """Show all topics."""
     topics = Topic.objects.filter(owner=request.user).order_by("date_added")
     context = {"topics": topics}
@@ -22,20 +23,23 @@ def topics(request):
 
 
 @login_required
-def topic(request, topic_id):
+def topic(request: HttpRequest, topic_id: int) -> HttpResponse:
     """Show a single topic and all its entries."""
     topic = Topic.objects.get(id=topic_id)
+
+    assert request.user.is_authenticated
+
     # Make sure the topic belongs to the current user.
     if topic.owner != request.user:
         raise Http404
 
-    entries = topic.entry_set.order_by("-date_added")
+    entries = topic.entry_set.order_by("-date_added")  # type: ignore[attr-defined]
     context = {"topic": topic, "entries": entries}
     return render(request, "learning_logs/topic.html", context)
 
 
 @login_required
-def new_topic(request):
+def new_topic(request: HttpRequest) -> HttpResponse:
     """Add a new topic."""
     if request.method != "POST":
         # No data submitted; create a blank form.
@@ -55,7 +59,7 @@ def new_topic(request):
 
 
 @login_required
-def new_entry(request, topic_id):
+def new_entry(request: HttpRequest, topic_id: int) -> HttpResponse:
     """Add a new entry for a particular topic."""
     topic = Topic.objects.get(id=topic_id)
 
@@ -77,7 +81,7 @@ def new_entry(request, topic_id):
 
 
 @login_required
-def edit_entry(request, entry_id):
+def edit_entry(request: HttpRequest, entry_id: int) -> HttpResponse:
     """Edit an exissting entry."""
     entry = Entry.objects.get(id=entry_id)
     topic = entry.topic
