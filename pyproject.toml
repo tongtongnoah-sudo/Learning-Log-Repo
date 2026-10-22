@@ -26,3 +26,4 @@ dev = [
 [tool.mypy]
 explicit_package_bases = true
 namespace_packages = true
+ignore_missing_imports = true
