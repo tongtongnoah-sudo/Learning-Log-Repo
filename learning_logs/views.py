@@ -1,10 +1,9 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
+from django.shortcuts import redirect, render
 
-from .models import Topic, Entry
-from .forms import TopicForm, EntryForm
+from .forms import EntryForm, TopicForm
+from .models import Entry, Topic
 
 print("Hello, Git")
 
