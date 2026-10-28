@@ -1,0 +1,5 @@
+[
+    {"opening": "Sicilian Defense", "tactic": "fork"},
+    {"opening": "King's Indian Defense", "tactic": "pin", "phase": "endgame"},
+    {"opening": "Caro-Kann Defense", "tactic": "skewer", "phase": 4}
+]
